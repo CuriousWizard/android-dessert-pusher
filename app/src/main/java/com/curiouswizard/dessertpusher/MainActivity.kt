@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
 
     /** Dessert Data **/
 
+
     /**
      * Simple data class that represents a dessert. Includes the resource id integer associated with
      * the image, the price it's sold for, and the startProductionAmount, which determines when
@@ -76,6 +77,13 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
         }
 
         dessertTimer = DessertTimer(this.lifecycle)
+
+        if (savedInstanceState != null) {
+            revenue = savedInstanceState.getInt("key_revenue",0)
+            dessertsSold = savedInstanceState.getInt("key_dessertsSold", 0)
+            dessertTimer.secondsCount = savedInstanceState.getInt("key_timer_seconds", 0)
+            showCurrentDessert()
+        }
 
         // Set the TextViews to the right values
         binding.revenue = revenue
@@ -180,5 +188,13 @@ class MainActivity : AppCompatActivity(), LifecycleObserver {
     override fun onStop() {
         super.onStop()
         Timber.i("onStop called")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("key_revenue",revenue)
+        outState.putInt("key_dessertsSold",dessertsSold)
+        outState.putInt("key_timer_seconds",dessertTimer.secondsCount)
+        Timber.i("onSaveInstanceState called")
     }
 }
